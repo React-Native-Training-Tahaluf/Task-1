@@ -1,17 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
-import AuthenticateContext from "../Context/Context";
-import Route, { PrivateNavigation, PublicNavigation } from "../Navigation/Navigation";
+import { PublicNavigation } from "../Navigation/Navigation";
 
 const Layout = () =>{
-    var [IsLoggedIn,SetLoggedIn] = React.useState(false);
-
+console.log('[Layout] : Rerender');
     return (
-        <AuthenticateContext.Provider value={{IsLoggedIn:IsLoggedIn,SetLoggedIn : SetLoggedIn}}>
         <NavigationContainer>
-            <Route />
+            <PublicNavigation />
         </NavigationContainer>
-        </AuthenticateContext.Provider>
     )
 }
 

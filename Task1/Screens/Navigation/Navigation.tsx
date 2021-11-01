@@ -5,9 +5,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LogIn from "../Views/Public/LogIn";
 import Register from "../Views/Public/Register";
 import Home from "../Views/Private/Home";
-import AuthenticateContext from "../Context/Context";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import { DangerButton } from "../Components/ReusableFunctions/Buttons";
+import ForgetPassword from "../Views/Public/ForgetPassword";
 
 const Stack = createStackNavigator();
 const BottomBar = createBottomTabNavigator();
@@ -19,35 +20,42 @@ export const PublicNavigation = () =>{
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName='LogIn'>
             <Stack.Screen name='LogIn' component={LogIn} />
             <Stack.Screen name='Register' component={Register} />
+            <Stack.Screen name='ForgetPassword' component={ForgetPassword} />
         </Stack.Navigator>
     )
 }
 
-export const PrivateNavigation = () =>{
+export const PrivateNavigation = (props) =>{
+    console.log('[PrivateNavigation] : Rerender');
+        
+    const Logout= async()=>{
+        await AsyncStorage.removeItem('token');
+        props.SetIsLoggedIn(false);
+    }
+
     return(
+        <View style={{flex:1}}>
+            <DangerButton text ='LogOut' Action = {Logout} />
             <BottomBar.Navigator>
                 <BottomBar.Screen
                     options={{
                         tabBarLabel: 'Home Screen'
+                        ,headerShown:false
                     }}
                     name={'Home'}
                     component={Home}
                 ></BottomBar.Screen>
             </BottomBar.Navigator>
-    )
-}
-
-const Route = () =>{
-
-    const Context : any = React.useContext(AuthenticateContext);
-    
-    return (
-        <View style={{flex:1}}>
-        {
-            Context.IsLoggedIn ? <PrivateNavigation /> : <PublicNavigation />
-        }
         </View>
     )
 }
 
-export default Route;
+// const Route = () =>{
+    
+//     return (
+//         <View style={{flex:1}}>
+//             <PublicNavigation />
+//         </View>
+//     )
+// }
+

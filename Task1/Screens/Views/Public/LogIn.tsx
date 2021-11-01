@@ -5,12 +5,16 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadScreen from "../LoadScreen";
 import { Image } from "react-native-animatable";
-import AuthenticateContext from "../../Context/Context";
+import { PrivateNavigation } from "../../Navigation/Navigation";
+import { SuccessButton } from "../../Components/ReusableFunctions/Buttons";
+import { useNavigation } from "@react-navigation/native";
 
 const LogIn = () =>{
 console.log('[LogIn] : Rerender');
-        
-    const Context : any = React.useContext(AuthenticateContext);
+
+    var navigation = useNavigation<any>();
+
+    var [IsLoggedIn,SetIsLoggedIn] = React.useState(false);
     var [Loading,SetLoading] = React.useState(true);
 
     var [Email,SetEmail] = React.useState('');
@@ -29,7 +33,7 @@ console.log('[LogIn] : Rerender');
 
         setTimeout(async () => {
             await AsyncStorage.setItem('token','MyToken');
-            Context.SetLoggedIn(true);
+            SetIsLoggedIn(true);
             SetLoading(false);
         }, 2000);
     }
@@ -37,7 +41,7 @@ console.log('[LogIn] : Rerender');
     useEffect(() => {        
         setTimeout(async () => {
           var token =  await AsyncStorage.getItem('token');
-          if(token == null){Context.SetLoggedIn(false);}else{Context.SetLoggedIn(true);}
+          if(token == null){SetIsLoggedIn(false);}else{SetIsLoggedIn(true);}
           SetLoading(false);
         }, 5000);
     }, [])
@@ -46,6 +50,7 @@ console.log('[LogIn] : Rerender');
         <SafeAreaView style={{flex:1}}>
         {
             Loading ? <LoadScreen /> : 
+            IsLoggedIn ? <PrivateNavigation SetIsLoggedIn = {SetIsLoggedIn} /> :
         <ImageBackground source={require('../../../Assets/Images/Background/pexels-hisham-zayadnh-5360755.jpg')}
          resizeMode="cover" style={[Style.MainView]}>
               <View style={{flex:1}}>
@@ -53,15 +58,30 @@ console.log('[LogIn] : Rerender');
                       style={[Style.Icon]}
                       />
               </View>
-             <View style={{flex:3}}></View>
+             <View style={{flex:2}}></View>
         <View style={[Style.LogInForm]}>
             <InputBox placeholder = 'Email' ErrorMessage ='should be email.' ErrorCondition={ConditionEmail(Email)} keyboardType = 'default' Value = {Email} SetValue = {SetEmail}/>
             <InputBox placeholder = 'Password' ErrorMessage = 'Password should be much more 8 character.' ErrorCondition={ConditionLength(Password,8)} keyboardType = 'default' Value = {Password} SetValue = {SetPassword} secureTextEntry = {true}/>
             
-            <View style={{alignItems:'flex-end'}}>
+            <View>
+                <TouchableOpacity style={[Style.ForgetPasswordButton]}
+                onPress={()=>{navigation.navigate('ForgetPassword')}}>
+                    <Text style={[Style.ForgetPasswordText]}>Forget Password</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{flexDirection:'row'
+            ,justifyContent:'space-between'}}>
+
+                    <SuccessButton text='Register' 
+                    ButtonStyle={{borderRadius:30,width:100}} 
+                    TextStyle ={{fontSize:15}}
+                    Action={()=>{navigation.navigate('Register')}} />
+
+
                 {
                     !(ConditionEmail(Email) || ConditionLength(Password,8)) ?
-                                <TouchableOpacity style={[Style.LogInButtonActive]} 
+            <TouchableOpacity style={[Style.LogInButtonActive]} 
             onPress = {()=>{Submit()}}>
                 <Text style={{color:'#fff'}}>LogIn</Text>
             </TouchableOpacity>
@@ -73,6 +93,7 @@ console.log('[LogIn] : Rerender');
             </View>
         </View>
         </ImageBackground>
+        
         }
         </SafeAreaView>
     )
@@ -100,5 +121,13 @@ const Style = StyleSheet.create({
     LogInButtonInactive :{
         backgroundColor:'#de8e4936',borderRadius:30
         ,width:100,height:50,alignItems:'center',justifyContent:'center'
+    },
+    ForgetPasswordButton :{
+        margin:10,
+
+    },
+    ForgetPasswordText:{
+        fontSize:15,color:'#fff',fontWeight:'600',
+        textDecorationLine: 'underline'
     }
 })
