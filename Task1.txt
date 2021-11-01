@@ -1,0 +1,17 @@
+=> Login page (useRef, useState, useEffect, AsyncStorage, Navigation)
+
+=> Register ..
+    => Page to fill information (email)
+    => Verify email ?
+        => show OTP component 6 digits
+            => fill / success (Navigate to fill information , firstName, password etc..)
+            => keep Information in navigation props.
+            
+            => resend (Show timer)
+
+
+=> Forget password to enter the email
+    => OTP page for the email
+    => update password (with confirm password)
+
+Regex validation for emails and passwords.
