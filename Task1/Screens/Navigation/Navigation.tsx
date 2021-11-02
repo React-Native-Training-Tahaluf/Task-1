@@ -9,6 +9,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { DangerButton } from "../Components/ReusableFunctions/Buttons";
 import ForgetPassword from "../Views/Public/ForgetPassword";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
 const BottomBar = createBottomTabNavigator();
@@ -35,13 +36,24 @@ export const PrivateNavigation = (props) =>{
 
     return(
         <View style={{flex:1}}>
-            <DangerButton text ='LogOut' Action = {Logout} />
+            {/* <DangerButton text ='LogOut' Action = {Logout} /> */}
             <BottomBar.Navigator>
                 <BottomBar.Screen
                     options={{
-                        tabBarLabel: 'Home Screen'
-                        ,headerShown:false
+                        tabBarLabel: ''
+                        ,headerShown:false,
+                        tabBarIcon:()=>{
+                            return (
+                                 <FontAwesome 
+        name="sign-out"
+        color='blue'
+        size={40}
+        onPress={()=>{Logout()}} color= 'red'
+    />
+                            )
+                        }
                     }}
+                    
                     name={'Home'}
                     component={Home}
                 ></BottomBar.Screen>
