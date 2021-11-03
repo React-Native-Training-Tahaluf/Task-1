@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { View,Image, StyleSheet, Text, ToastAndroid } from "react-native";
+import React, { useState,useEffect,useRef } from "react";
+import { View,Image, StyleSheet, Text, ToastAndroid, Button } from "react-native";
 import { ConditionConfirmValues, ConditionEmail, ConditionLength } from "../ReusableFunctions/Conditions";
 import { InputBox, PasswordBox } from "../ReusableFunctions/InputBox";
 import * as Animatable from 'react-native-animatable';
 
+import {Timer, Countdown} from 'react-native-element-timer';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { SuccessButton } from "../ReusableFunctions/Buttons";
 
 export const EmailScreen = ({Email,SetEmail}:any) =>{
     return (
@@ -26,6 +28,23 @@ export const EmailScreen = ({Email,SetEmail}:any) =>{
 
 
 export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
+console.log('VerifyEmailScreen');
+
+    const timerRef = useRef(null);
+    var [StatusTimer,SetStatusTimer] = useState(true);
+
+    useEffect(() => {
+        console.log('Start Timer');
+        timerRef.current.start();
+    }, []);
+    const RestTimer = () =>{
+        console.log('Start Timer');
+        timerRef.current.start(); 
+        SetStatusTimer(true);
+    }
+    const EndTimer = () =>{
+        SetStatusTimer(false);
+    }
 
     return (
         <View style={[Style.MainView]}>
@@ -38,6 +57,7 @@ export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
             </View>
               <Text style={[StyleVerifyEmailScreen.Text]}>Check Your Email Please</Text>
 
+{ StatusTimer ? 
               <OTPInputView 
     style={{width: '80%', height: 100}}
     pinCount={6}
@@ -66,6 +86,25 @@ export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
         }
     })}
 />
+:null}
+
+<View>
+                    <Countdown
+                    ref={timerRef}
+                    seconds={30}
+                    style={StyleVerifyEmailScreen.Timer}
+                    textStyle={StyleVerifyEmailScreen.CountTimer}
+                    onEnd={e => {EndTimer();}}
+                />
+                {
+                    StatusTimer ? null :
+                            <SuccessButton text='Resend' 
+        ButtonStyle={{borderRadius:10,width:100,marginTop:30}} 
+        TextStyle ={{fontSize:15}}
+        Action={()=> {RestTimer()}} />
+
+                }
+</View>
 </View>
         </View>
     )
@@ -88,6 +127,12 @@ const StyleVerifyEmailScreen = StyleSheet.create({
   underlineStyleHighLighted: {
     borderColor: "green",
   },
+  Timer :{
+      borderWidth:1,justifyContent:'center',alignItems:'center'
+  },
+  CountTimer:{
+      fontSize:30,padding:10
+  }
 })
 
 

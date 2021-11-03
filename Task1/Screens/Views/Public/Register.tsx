@@ -54,7 +54,6 @@ const Register = ({route}:any) =>{
 
     useEffect(() => {
         console.log(route);
-        
         SetEmail(route.params.Email);
     }, [])
 
