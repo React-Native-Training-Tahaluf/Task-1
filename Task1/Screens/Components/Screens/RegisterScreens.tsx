@@ -34,10 +34,11 @@ export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
                 require('../../../Assets/Images/Icons/VerifyEmail.png')
             }style={[Style.Icon]}
             />
+            <View style={{alignItems:'center',justifyContent:'center'}}>
             </View>
               <Text style={[StyleVerifyEmailScreen.Text]}>Check Your Email Please</Text>
 
-              <OTPInputView
+              <OTPInputView 
     style={{width: '80%', height: 100}}
     pinCount={6}
     autoFocusOnLoad
@@ -54,6 +55,7 @@ export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
       50
     );
         }else{
+            SetCheckCode(false);
                 ToastAndroid.showWithGravityAndOffset(
       "Mistake Code",
       ToastAndroid.LONG,
@@ -64,6 +66,7 @@ export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
         }
     })}
 />
+</View>
         </View>
     )
 }

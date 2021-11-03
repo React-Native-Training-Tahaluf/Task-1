@@ -22,7 +22,7 @@ console.log('[LogIn] : Rerender');
     var [Email,SetEmail] = React.useState('');
     var [Password,SetPassword] = React.useState('');
 
-    const Submit = () =>{
+    const LogIn = () =>{
         SetLoading(true);
 
         setTimeout(async () => {
@@ -52,7 +52,7 @@ console.log('[LogIn] : Rerender');
             
             <View>
                 <TouchableOpacity style={[Style.ForgetPasswordButton]}
-                onPress={()=>{navigation.navigate('ForgetPassword')}}>
+                onPress={()=>{navigation.navigate('ForgetPassword',{Email:Email})}}>
                     <Text style={[Style.ForgetPasswordText]}>Forget Password</Text>
                 </TouchableOpacity>
             </View>
@@ -63,13 +63,13 @@ console.log('[LogIn] : Rerender');
                     <SuccessButton text='Register' 
                     ButtonStyle={{borderRadius:30,width:100}} 
                     TextStyle ={{fontSize:15}}
-                    Action={()=>{navigation.navigate('Register',{Email:Email,LogIn:Submit})}} />
+                    Action={()=>{navigation.navigate('Register',{Email:Email,LogIn:LogIn})}} />
 
 
                 {
                     !(ConditionEmail(Email) || ConditionLength(Password,8)) ?
             <TouchableOpacity style={[Style.LogInButtonActive]} 
-            onPress = {()=>{Submit()}}>
+            onPress = {()=>{LogIn()}}>
                 <Text style={{color:'#fff'}}>LogIn</Text>
             </TouchableOpacity>
                     : 
@@ -80,50 +80,6 @@ console.log('[LogIn] : Rerender');
             </View>
             </View>
         </MainScreen>
-
-            // <ImageBackground source={require('../../../Assets/Images/Background/pexels-hisham-zayadnh-5360755.jpg')}
-        //  resizeMode="cover" style={[Style.MainView]}>
-        //       <View style={{flex:1}}>
-        //               <Image source={require('../../../Assets/Images/Icons/petra.png')}
-        //               style={[Style.Icon]}
-        //               />
-        //       </View>
-        //      <View style={{flex:2}}></View>
-        // <View style={[Style.LogInForm]}>
-        //     <InputBox placeholder = 'Email' ErrorMessage ='should be email.' ErrorCondition={ConditionEmail(Email)} keyboardType = 'default' Value = {Email} SetValue = {SetEmail}/>
-        //     <InputBox placeholder = 'Password' ErrorMessage = 'Password should be much more 8 character.' ErrorCondition={ConditionLength(Password,8)} keyboardType = 'default' Value = {Password} SetValue = {SetPassword} secureTextEntry = {true}/>
-            
-        //     <View>
-        //         <TouchableOpacity style={[Style.ForgetPasswordButton]}
-        //         onPress={()=>{navigation.navigate('ForgetPassword')}}>
-        //             <Text style={[Style.ForgetPasswordText]}>Forget Password</Text>
-        //         </TouchableOpacity>
-        //     </View>
-
-        //     <View style={{flexDirection:'row'
-        //     ,justifyContent:'space-between'}}>
-
-        //             <SuccessButton text='Register' 
-        //             ButtonStyle={{borderRadius:30,width:100}} 
-        //             TextStyle ={{fontSize:15}}
-        //             Action={()=>{navigation.navigate('Register')}} />
-
-
-        //         {
-        //             !(ConditionEmail(Email) || ConditionLength(Password,8)) ?
-        //     <TouchableOpacity style={[Style.LogInButtonActive]} 
-        //     onPress = {()=>{Submit()}}>
-        //         <Text style={{color:'#fff'}}>LogIn</Text>
-        //     </TouchableOpacity>
-        //             : 
-        //             <View style={[Style.LogInButtonInactive]} >
-        //                 <Text style={{color:'#fff'}}>LogIn</Text>
-        //             </View>
-        //         }
-        //     </View>
-        // </View>
-        // </ImageBackground>
-        
         }
         </SafeAreaView>
     )
