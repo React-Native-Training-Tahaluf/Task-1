@@ -2,6 +2,7 @@ import React from "react";
 import { View,Image, Text, StyleSheet } from "react-native";
 
 export const ItemImage = (item:any) =>{
+  console.log('[ItemImage] : Item : Rerender');
 return (
   <View>
     <Image style={[Style.ImageGlary]} source={item.item.Image} />
@@ -10,6 +11,7 @@ return (
 }
 
 export const ItemDescription = (item:any) =>{
+  console.log('[ItemDescription] : Item : Rerender');
 return (
   <View style={[Style.ItemViewDescription]}>
     <View style={{flexDirection:'row',alignItems:'center'}}>

@@ -4,6 +4,7 @@ import { StyleSheet,Image,ImageBackground,Text,Easing, View, Animated } from "re
 
 
 const LoadScreen = () =>{
+    console.log('[LoadScreen] : Screen : Rerender');
 
     var spinValue = new Animated.Value(0);
 

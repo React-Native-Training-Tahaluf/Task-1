@@ -1,35 +1,39 @@
-import React,{useEffect} from "react";
-import { StyleSheet,Text, View,TouchableOpacity, ImageBackground } from "react-native";
-import {InputBox, PasswordBox} from "../../Components/ReusableFunctions/InputBox";
+import React,{useEffect,useRef} from "react";
+import { StyleSheet,Text, View,TouchableOpacity } from "react-native";
+import {InputBoxUseRef, PasswordBoxUseRef} from "../../Components/ReusableFunctions/InputBox";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadScreen from "../LoadScreen";
-import { Image } from "react-native-animatable";
 import { PrivateNavigation } from "../../Navigation/Navigation";
 import { SuccessButton } from "../../Components/ReusableFunctions/Buttons";
 import { useNavigation } from "@react-navigation/native";
 import { MainScreen } from "../../Components/ReusableFunctions/Containers";
-import { ConditionEmail, ConditionLength } from "../../Components/ReusableFunctions/Conditions";
 
 const LogIn = () =>{
-console.log('[LogIn] : Rerender');
+console.log('[LogIn] : Screen : Rerender');
 
     var navigation = useNavigation<any>();
 
     var [IsLoggedIn,SetIsLoggedIn] = React.useState(false);
     var [Loading,SetLoading] = React.useState(true);
 
-    var [Email,SetEmail] = React.useState('');
-    var [Password,SetPassword] = React.useState('');
+    var LogInForm = useRef({Email : '',Password:''});
 
     const LogIn = () =>{
-        SetLoading(true);
+                SetLoading(true);
 
         setTimeout(async () => {
             await AsyncStorage.setItem('token','MyToken');
             SetIsLoggedIn(true);
             SetLoading(false);
         }, 2000);
+    }
+
+    const ToRegister = () =>{
+navigation.navigate('Register'
+                    ,{Email:LogInForm.current.Email
+                    ,LogIn:LogIn
+                    });
     }
 
     useEffect(() => {        
@@ -47,12 +51,23 @@ console.log('[LogIn] : Rerender');
             IsLoggedIn ? <PrivateNavigation SetIsLoggedIn = {SetIsLoggedIn} /> :
         <MainScreen BackgroundImage ={require('../../../Assets/Images/Background/pexels-hisham-zayadnh-5360755.jpg')}>
 <View style={[Style.LogInForm]}>
-            <InputBox placeholder = 'Email' ErrorMessage ='should be email.' ErrorCondition={ConditionEmail(Email)} keyboardType = 'default' Value = {Email} SetValue = {SetEmail}/>            
-            <PasswordBox placeholder = 'Password' ErrorMessage = 'Password should be much more 8 character.' ErrorCondition={ConditionLength(Password,8)} keyboardType = 'default' Value = {Password} SetValue = {SetPassword}/>
-            
+
+            <InputBoxUseRef Type = 'Email' 
+            placeholder = 'Enter Your Email' 
+            ErrorMessage ='should be email.' 
+            onChange = {(val:any)=>{LogInForm.current.Email = val;}} 
+             />
+            <PasswordBoxUseRef
+            Type = 'Length' Length = {8}
+            placeholder = 'Enter Your Password' 
+            ErrorMessage ='Password should be much more 8 character.' 
+            onChange = {(val:any)=>{LogInForm.current.Password = val;}}
+             />
+
             <View>
                 <TouchableOpacity style={[Style.ForgetPasswordButton]}
-                onPress={()=>{navigation.navigate('ForgetPassword',{Email:Email})}}>
+                onPress={()=>{navigation.navigate('ForgetPassword'
+                ,{Email:LogInForm.current.Email})}}>
                     <Text style={[Style.ForgetPasswordText]}>Forget Password</Text>
                 </TouchableOpacity>
             </View>
@@ -63,20 +78,12 @@ console.log('[LogIn] : Rerender');
                     <SuccessButton text='Register' 
                     ButtonStyle={{borderRadius:30,width:100}} 
                     TextStyle ={{fontSize:15}}
-                    Action={()=>{navigation.navigate('Register',{Email:Email,LogIn:LogIn})}} />
+                    Action={()=>{ToRegister();}} />
 
-
-                {
-                    !(ConditionEmail(Email) || ConditionLength(Password,8)) ?
             <TouchableOpacity style={[Style.LogInButtonActive]} 
             onPress = {()=>{LogIn()}}>
                 <Text style={{color:'#fff'}}>LogIn</Text>
             </TouchableOpacity>
-                    : 
-                    <View style={[Style.LogInButtonInactive]} >
-                        <Text style={{color:'#fff'}}>LogIn</Text>
-                    </View>
-                }
             </View>
             </View>
         </MainScreen>

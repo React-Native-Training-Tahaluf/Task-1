@@ -1,15 +1,17 @@
 
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { StyleSheet, Text, View,Image } from "react-native";
 
 import { ConditionConfirmValues, ConditionLength } from "../../Components/ReusableFunctions/Conditions";
-import { PasswordBox } from "../ReusableFunctions/InputBox";
+import { PasswordBox, PasswordBoxUseRef } from "../ReusableFunctions/InputBox";
 import * as Animatable from 'react-native-animatable';
+import { NormalErrorMessage } from "../ReusableFunctions/ErrorMessage";
 
 
 export const RegistrationScreen = 
 ({Password,SetPassword,ConfirmPassword,SetConfirmPassword
-}:any) =>{    
+}:any) =>{
+    console.log('[RegistrationScreen] : (ForgetPassword) Sub Screen : Rerender');  
     return (
         <View style={[Style.MainView]}>
             <View style={{flex:1,alignItems:'center'}}>
@@ -31,6 +33,52 @@ export const RegistrationScreen =
     )
 }
 
+
+//*******************************************UseRef */
+export const RegistrationScreenUseRef = 
+({ForgetPasswordForm,forceUpdate}:any) =>{
+    console.log('[RegistrationScreen] : (ForgetPassword) Sub Screen : Rerender');  
+    
+        var [VisibleLength,SetVisibleLength] = useState(false);
+    var [VisibleConfirmValue,SetVisibleConfirmValue] = useState(false);
+
+        useEffect(() => {
+        forceUpdate();
+    }, [VisibleLength,VisibleConfirmValue])
+    return (
+        <View style={[Style.MainView]}>
+            <View style={{flex:1,alignItems:'center'}}>
+            <Image source={
+                require('../../../Assets/Images/Icons/verified-user.png')
+            }style={[Style.Icon]}
+            />
+            </View>
+
+            <PasswordBoxUseRef
+            Type = 'Length' Length = {8}
+            placeholder = 'Enter Your Password' 
+            ErrorMessage ='Password should be much more 8 character.' 
+            onChange = {(val:any)=>{ForgetPasswordForm.current.Password = val;}}
+             />
+
+            <PasswordBoxUseRef
+            Type = 'Length' Length = {8}
+            placeholder = 'Enter Confirm Password' 
+            ErrorMessage ='Password should be much more 8 character.' 
+            onChange = {(val:any)=>{ForgetPasswordForm.current.ConfirmPassword = val; 
+                SetVisibleLength(ConditionLength(val,8)); 
+                SetVisibleConfirmValue(ConditionConfirmValues(ForgetPasswordForm.current.ConfirmPassword
+                    ,ForgetPasswordForm.current.Password))
+                }}
+             />
+
+            <NormalErrorMessage 
+             ErrorMessage ='Password not match for confirm password' 
+             Condition = {(!VisibleLength && !VisibleConfirmValue)}/>
+        </View>
+    )
+}
+
 const StyleRegistrationScreen = StyleSheet.create({
     ErrorMessage: {
         color: '#FF0000',
@@ -42,6 +90,7 @@ const StyleRegistrationScreen = StyleSheet.create({
 
 
 export const SubmitScreen = () =>{
+    console.log('[SubmitScreen] : (ForgetPassword) Sub Screen : Rerender'); 
     return (
         <View style={[Style.MainView]}>
             <View style={{flex:1,alignItems:'center'}}>

@@ -3,6 +3,7 @@ import { TouchableOpacity,Text, StyleSheet } from "react-native";
 
 
 export const DangerButton = ({text,Action,style={}}) => {     
+    console.log('[DangerButton] : Button : Rerender');
     return (
     <TouchableOpacity style={[Style.DangerButton]}
     onPress={()=>{Action()}}>
@@ -13,6 +14,7 @@ export const DangerButton = ({text,Action,style={}}) => {
 
 
 export const SuccessButton = ({text,Action,ButtonStyle={},TextStyle={}}) => {     
+    console.log('[SuccessButton] : Button : Rerender');
     return (
     <TouchableOpacity style={[Style.SuccessButton,ButtonStyle]}
     onPress={()=>{Action()}}>

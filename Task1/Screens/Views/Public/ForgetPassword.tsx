@@ -3,10 +3,11 @@ import { StyleSheet, Text, View } from "react-native";
 import { MainScreen } from "../../Components/ReusableFunctions/Containers";
 
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import {  VerifyEmailScreen,EmailScreen } from "../../Components/Screens/RegisterScreens";
+import {  VerifyEmailScreen,EmailScreen, EmailScreenUseRef } from "../../Components/Screens/RegisterScreens";
 import { ConditionConfirmValues, ConditionEmail, ConditionLength } from "../../Components/ReusableFunctions/Conditions";
 import { useNavigation } from "@react-navigation/core";
-import { RegistrationScreen,SubmitScreen } from "../../Components/Screens/ForgetPasswordScreens";
+import { RegistrationScreen,RegistrationScreenUseRef,SubmitScreen } from "../../Components/Screens/ForgetPasswordScreens";
+import { useForceUpdate } from "../../Components/ReusableFunctions/useForceUpdate";
 
 
 
@@ -20,13 +21,17 @@ var BackgroundList = [
 ]
 
 const ForgetPassword = ({route}:any) =>{
-    console.log('[ForgetPassword] : Rerender');
+    console.log('[ForgetPassword] : Screen : Rerender');
+    const forceUpdate = useForceUpdate();
 
     var Navigation = useNavigation<any>();
     var [Email,SetEmail] = useState('');
     var [BackgroundImage,SetBackgroundImage] = React.useState(require('../../../Assets/Images/Background/pexels-hisham-zayadnh-4216244.jpg'));
-    var [Password,SetPassword] = useState('');
-    var [ConfirmPassword,SetConfirmPassword] = useState('');
+
+    var ForgetPasswordForm = useRef({
+        Password:'',
+        ConfirmPassword:'',
+    })
 
     var [CheckCode,SetCheckCode] = useState(false);
 
@@ -40,7 +45,7 @@ const ForgetPassword = ({route}:any) =>{
         labelColor : '#000'
     };
     useEffect(() => {
-        SetEmail(route.params.Email);
+        SetEmail(route.params.Email)
     }, [])
 
     const ChangeBackground = () =>{
@@ -49,17 +54,16 @@ const ForgetPassword = ({route}:any) =>{
     }
 
     const Check = () =>{
-        const PasswordCon = !ConditionLength(Password,8);
-        const ConfirmPasswordCon = ConditionConfirmValues(Password,ConfirmPassword);
-        
+        const PasswordCon = !ConditionLength(ForgetPasswordForm.current.Password,8);
+        const ConfirmPasswordCon = 
+        ConditionConfirmValues(ForgetPasswordForm.current.Password
+            ,ForgetPasswordForm.current.ConfirmPassword);
         return ((PasswordCon&&ConfirmPasswordCon))
     }
 
     const Submit = () =>{        
-        console.log('Password : ' + Password);
-        console.log('ConfirmPassword : ' + ConfirmPassword);
-        
-        Navigation.navigate('LogIn')
+        console.log(ForgetPasswordForm.current);
+        Navigation.navigate('LogIn');
     }
 
     return(
@@ -68,10 +72,11 @@ const ForgetPassword = ({route}:any) =>{
 
     <View style = {[Style.MainView]}>
         <ProgressSteps {...progressStepsStyle}>
-        <ProgressStep label="Email" onNext={ChangeBackground} nextBtnDisabled = {ConditionEmail(Email)}
+        <ProgressStep label="Email" onNext={ChangeBackground} 
+        nextBtnDisabled = {ConditionEmail(Email)}
         nextBtnStyle={Style.NextButton}>
             <View style={{ alignItems: 'center' }}>
-                <EmailScreen Email ={Email} SetEmail = {SetEmail} />
+                <EmailScreen Email = {Email} SetEmail = {SetEmail} />
             </View>
         </ProgressStep>
         <ProgressStep label="Verify" onNext={ChangeBackground} nextBtnDisabled = {!CheckCode}
@@ -85,8 +90,9 @@ const ForgetPassword = ({route}:any) =>{
         nextBtnStyle={Style.NextButton}
         previousBtnDisabled = {true}>
             <View style={{ alignItems: 'center' }}>
-                <RegistrationScreen Password={Password} SetPassword ={SetPassword} 
-                ConfirmPassword = {ConfirmPassword} SetConfirmPassword ={SetConfirmPassword}/>
+                <RegistrationScreenUseRef 
+                ForgetPasswordForm = {ForgetPasswordForm} 
+                forceUpdate={forceUpdate} />
             </View>
         </ProgressStep>
         

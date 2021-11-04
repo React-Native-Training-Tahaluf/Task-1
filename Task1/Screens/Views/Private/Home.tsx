@@ -22,7 +22,7 @@ var Description =[
 ]
 
 const Home = () =>{
-    console.log('[Home] : Rerender');
+    console.log('[Home] : Screen : Rerender');
 
   var [Hearts,SetHearts] = React.useState(468);
   var [Favorites,SetFavorites] = React.useState(709);

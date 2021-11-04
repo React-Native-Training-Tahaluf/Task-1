@@ -4,6 +4,7 @@ import {View,ImageBackground,Image,StyleSheet} from 'react-native';
 export const MainScreen = ({children
     ,BackgroundImage = require('../../../Assets/Images/Background/pexels-hisham-zayadnh-5360755.jpg')
 }:any)=>{
+    console.log('[MainScreen] : Container : Rerender');
     return(
                 <ImageBackground source={BackgroundImage}
          resizeMode="cover" style={[Style.MainView]}>

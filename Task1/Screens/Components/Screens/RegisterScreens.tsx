@@ -1,14 +1,16 @@
 import React, { useState,useEffect,useRef } from "react";
 import { View,Image, StyleSheet, Text, ToastAndroid, Button } from "react-native";
 import { ConditionConfirmValues, ConditionEmail, ConditionLength } from "../ReusableFunctions/Conditions";
-import { InputBox, PasswordBox } from "../ReusableFunctions/InputBox";
+import { InputBox, InputBoxUseRef, PasswordBox, PasswordBoxUseRef } from "../ReusableFunctions/InputBox";
 import * as Animatable from 'react-native-animatable';
 
 import {Timer, Countdown} from 'react-native-element-timer';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { SuccessButton } from "../ReusableFunctions/Buttons";
+import { NormalErrorMessage } from "../ReusableFunctions/ErrorMessage";
 
 export const EmailScreen = ({Email,SetEmail}:any) =>{
+    console.log('[EmailScreen] : (Register) Sub Screen : Rerender');  
     return (
         <View style={[Style.MainView]}>
             <View style={{flex:1,alignItems:'center'}}>
@@ -17,7 +19,31 @@ export const EmailScreen = ({Email,SetEmail}:any) =>{
             }style={[Style.Icon]}
             />
             </View>
-            <InputBox placeholder = 'Enter Your Email' ErrorMessage ='should be email.' ErrorCondition={ConditionEmail(Email)} keyboardType = 'default' Value = {Email} SetValue = {SetEmail}/>     
+            <InputBox placeholder = 'Enter Your Email' 
+            ErrorMessage ='should be email.' 
+            ErrorCondition={ConditionEmail(Email)} 
+            keyboardType = 'default' Value = {Email} 
+            SetValue = {SetEmail}/>     
+        </View>
+    )
+}
+//*************************************************** UseRef
+export const EmailScreenUseRef = ({Form,forceUpdate}:any) =>{
+    console.log('[EmailScreenUseRef] : (Register) Sub Screen : Rerender');      
+    return (
+        <View style={[Style.MainView]}>
+            <View style={{flex:1,alignItems:'center'}}>
+            <Image source={
+                require('../../../Assets/Images/Icons/email.png')
+            }style={[Style.Icon]}
+            />
+            </View>
+            <InputBoxUseRef Type = 'Email' 
+            placeholder = 'Enter Your Email' 
+            ErrorMessage ='should be email.' 
+            onChange = {(val:any)=>{Form.current.Email = val;}} 
+            forceUpdate = {forceUpdate}
+             />
         </View>
     )
 }
@@ -26,10 +52,8 @@ export const EmailScreen = ({Email,SetEmail}:any) =>{
 
 
 
-
 export const VerifyEmailScreen = ({SetCheckCode}:any) =>{
-console.log('VerifyEmailScreen');
-
+     console.log('[VerifyEmailScreen] : (Register) Sub Screen : Rerender');
     const timerRef = useRef(null);
     var [StatusTimer,SetStatusTimer] = useState(true);
 
@@ -138,10 +162,12 @@ const StyleVerifyEmailScreen = StyleSheet.create({
 
 
 
+//***********************************************UseState */
 export const RegistrationScreen = 
 ({Password,SetPassword,Nickname,SetNickname
     ,ConfirmPassword,SetConfirmPassword
-}:any) =>{    
+}:any) =>{  
+    console.log('[RegistrationScreen] : (Register) Sub Screen : Rerender');  
     return (
         <View style={[Style.MainView]}>
             <View style={{flex:1,alignItems:'center'}}>
@@ -154,13 +180,61 @@ export const RegistrationScreen =
 
             <PasswordBox placeholder = 'Password' ErrorMessage = 'Password should be much more 8 character.' ErrorCondition={ConditionLength(Password,8)} keyboardType = 'default' Value = {Password} SetValue = {SetPassword}/> 
             <PasswordBox placeholder = 'Confirm Password' ErrorMessage = 'Confirm Password should be much more 8 character.' ErrorCondition={ConditionLength(Password,8)} keyboardType = 'default' Value = {ConfirmPassword} SetValue = {SetConfirmPassword}/>  
-                        {
-                !ConditionConfirmValues(Password,ConfirmPassword) && !ConditionLength(Password,8) ?
-                            <Animatable.View animation="fadeInLeft" duration={500}>
-            <Text style={StyleRegistrationScreen.ErrorMessage}>Password not match for confirm password</Text>
-            </Animatable.View>
-                : null
-            }
+            
+                         <NormalErrorMessage 
+             ErrorMessage ='Password not match for confirm password' 
+             Condition = {!ConditionConfirmValues(Password,ConfirmPassword) && !ConditionLength(Password,8)}/>
+        </View>
+    )
+}
+
+//***********************************************UseRef */
+export const RegistrationScreenUseRef = 
+({RegisterForm,forceUpdate}:any) =>{
+console.log('[RegistrationScreenUseRef] : (Register) Sub Screen : Rerender');
+    var [VisibleLength,SetVisibleLength] = useState(false);
+    var [VisibleConfirmValue,SetVisibleConfirmValue] = useState(false);
+
+    useEffect(() => {
+        forceUpdate();
+    }, [VisibleLength,VisibleConfirmValue])
+    return (
+        <View style={[Style.MainView]}>
+            <View style={{flex:1,alignItems:'center'}}>
+            <Image source={
+                require('../../../Assets/Images/Icons/verified-user.png')
+            }style={[Style.Icon]}
+            />
+            </View>
+
+            <InputBoxUseRef Type = 'Length' Length = {4}
+            placeholder = 'Enter Your Nickname' 
+            ErrorMessage ='Nickname should be much more 4 character.' 
+            onChange = {(val:any)=>{RegisterForm.current.Nickname = val;}} 
+            forceUpdate = {forceUpdate}
+             />
+
+            <PasswordBoxUseRef
+            Type = 'Length' Length = {8}
+            placeholder = 'Enter Your Password' 
+            ErrorMessage ='Password should be much more 8 character.' 
+            onChange = {(val:any)=>{RegisterForm.current.Password = val;}}
+             />
+
+            <PasswordBoxUseRef
+            Type = 'Length' Length = {8}
+            placeholder = 'Enter Confirm Password' 
+            ErrorMessage ='Password should be much more 8 character.' 
+            onChange = {(val:any)=>{RegisterForm.current.ConfirmPassword = val; 
+                SetVisibleLength(ConditionLength(val,8)); 
+                SetVisibleConfirmValue(ConditionConfirmValues(RegisterForm.current.ConfirmPassword
+                    ,RegisterForm.current.Password))
+                }}
+             />
+
+             <NormalErrorMessage 
+             ErrorMessage ='Password not match for confirm password' 
+             Condition = {(!VisibleLength && !VisibleConfirmValue)}/>
         </View>
     )
 }
@@ -177,6 +251,7 @@ const StyleRegistrationScreen = StyleSheet.create({
 
 
 export const SubmitScreen = () =>{
+    console.log('[SubmitScreen] : (Register) Sub Screen : Rerender');
     return (
         <View style={[Style.MainView]}>
             <View style={{flex:1,alignItems:'center'}}>

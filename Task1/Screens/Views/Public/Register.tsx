@@ -1,11 +1,12 @@
 import React,{useEffect,useState,useRef} from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { MainScreen } from "../../Components/ReusableFunctions/Containers";
 
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { EmailScreen, RegistrationScreen, SubmitScreen, VerifyEmailScreen } from "../../Components/Screens/RegisterScreens";
+import { EmailScreen, EmailScreenUseRef, RegistrationScreen, RegistrationScreenUseRef, SubmitScreen, VerifyEmailScreen } from "../../Components/Screens/RegisterScreens";
 import { ConditionConfirmValues, ConditionEmail, ConditionLength } from "../../Components/ReusableFunctions/Conditions";
 import { useNavigation } from "@react-navigation/core";
+import { useForceUpdate } from "../../Components/ReusableFunctions/useForceUpdate";
 
 
 
@@ -17,17 +18,23 @@ var BackgroundList = [
     require('../../../Assets/Images/Background/pexels-titoni-thomas-8377121.jpg'),
     require('../../../Assets/Images/Background/pexels-vincent-ma-janssen-3258226.jpg'),
 ]
-const Register = ({route}:any) =>{    
-    console.log('[Register] : Rerender');
+const Register = ({route}:any)  =>{    
+    console.log('[Register] : Screen : Rerender');
+    const forceUpdate = useForceUpdate();
+
 
     var Navigation = useNavigation<any>();
     var [BackgroundImage,SetBackgroundImage] = React.useState(require('../../../Assets/Images/Background/pexels-hisham-zayadnh-4216244.jpg'));
-    var [Email,SetEmail] = useState('');
-    var [Password,SetPassword] = useState('');
-    var [Nickname,SetNickname] = useState('');
-    var [ConfirmPassword,SetConfirmPassword] = useState('');
 
+    var [Email,SetEmail] = useState('');
     var [CheckCode,SetCheckCode] = useState(false);
+
+    var RegisterForm = useRef({
+        Email : '',
+        Password:'',
+        ConfirmPassword:'',
+        Nickname: ''
+    })
 
     const progressStepsStyle = {
         activeStepNumColor: "#000",
@@ -45,24 +52,21 @@ const Register = ({route}:any) =>{
     }
 
     const Check = () =>{
-        const NickNameCon= !ConditionLength(Nickname,4);
-        const PasswordCon = !ConditionLength(Password,8);
-        const ConfirmPasswordCon = ConditionConfirmValues(Password,ConfirmPassword);
+        
+        
+        const NickNameCon= !ConditionLength(RegisterForm.current.Nickname,4);
+        const PasswordCon = !ConditionLength(RegisterForm.current.Password,8);
+        const ConfirmPasswordCon = ConditionConfirmValues
+        (RegisterForm.current.Password,RegisterForm.current.ConfirmPassword);
         
         return ((NickNameCon&&PasswordCon&&ConfirmPasswordCon))
     }
 
     useEffect(() => {
-        console.log(route);
         SetEmail(route.params.Email);
     }, [])
 
-    const Submit = () =>{        
-        console.log('Email : ' + Email);
-        console.log('Password : ' + Password);
-        console.log('Nickname : ' + Nickname);
-        console.log('ConfirmPassword : ' + ConfirmPassword);
-        
+    const Submit = () => {
         Navigation.navigate('LogIn')
         route.params.LogIn();
     }
@@ -76,7 +80,7 @@ const Register = ({route}:any) =>{
         <ProgressStep label="Email" onNext={ChangeBackground} nextBtnDisabled = {ConditionEmail(Email)}
         nextBtnStyle={Style.NextButton}>
             <View style={{ alignItems: 'center' }}>
-                <EmailScreen Email ={Email} SetEmail = {SetEmail} />
+                <EmailScreen Email={Email} SetEmail ={SetEmail} />
             </View>
         </ProgressStep>
         <ProgressStep label="Verify Email" onNext={ChangeBackground} nextBtnDisabled = {!CheckCode}
@@ -86,13 +90,13 @@ const Register = ({route}:any) =>{
                 <VerifyEmailScreen SetCheckCode = {SetCheckCode} />
             </View>
         </ProgressStep>
-                <ProgressStep label="Registration" nextBtnDisabled = {!Check()}
+                <ProgressStep label="Registration" 
+                nextBtnDisabled = {!Check()}
         nextBtnStyle={Style.NextButton}
         previousBtnDisabled = {true}>
             <View style={{ alignItems: 'center' }}>
-                <RegistrationScreen Password={Password} SetPassword ={SetPassword} 
-                Nickname ={Nickname} SetNickname={SetNickname}
-                ConfirmPassword = {ConfirmPassword} SetConfirmPassword ={SetConfirmPassword}/>
+                <RegistrationScreenUseRef RegisterForm = {RegisterForm}
+                forceUpdate = {forceUpdate} />
             </View>
         </ProgressStep>
         
