@@ -1,13 +1,12 @@
-import React,{useEffect} from "react";
+import React from "react";
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LogIn from "../Views/Public/LogIn";
 import Register from "../Views/Public/Register";
 import Home from "../Views/Private/Home";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
-import { DangerButton } from "../Components/ReusableFunctions/Buttons";
 import ForgetPassword from "../Views/Public/ForgetPassword";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -36,7 +35,6 @@ export const PrivateNavigation = (props) =>{
 
     return(
         <View style={{flex:1}}>
-            {/* <DangerButton text ='LogOut' Action = {Logout} /> */}
             <BottomBar.Navigator>
                 <BottomBar.Screen
                     options={{

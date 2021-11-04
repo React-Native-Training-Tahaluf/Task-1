@@ -30,7 +30,6 @@ const Register = ({route}:any)  =>{
     var [CheckCode,SetCheckCode] = useState(false);
 
     var RegisterForm = useRef({
-        Email : '',
         Password:'',
         ConfirmPassword:'',
         Nickname: ''
@@ -66,9 +65,12 @@ const Register = ({route}:any)  =>{
         SetEmail(route.params.Email);
     }, [])
 
-    const Submit = () => {
-        Navigation.navigate('LogIn')
-        route.params.LogIn();
+    const Submit = () => {        
+        Navigation.navigate('LogIn');
+        console.log('Email : ' + Email);
+        console.log('Nickname : ' + RegisterForm.current.Nickname);
+        console.log('Password : ' + RegisterForm.current.Password);
+        console.log('ConfirmPassword : ' + RegisterForm.current.ConfirmPassword);   
     }
 
     return(

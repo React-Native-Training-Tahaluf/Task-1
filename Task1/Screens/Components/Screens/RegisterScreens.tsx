@@ -2,9 +2,8 @@ import React, { useState,useEffect,useRef } from "react";
 import { View,Image, StyleSheet, Text, ToastAndroid, Button } from "react-native";
 import { ConditionConfirmValues, ConditionEmail, ConditionLength } from "../ReusableFunctions/Conditions";
 import { InputBox, InputBoxUseRef, PasswordBox, PasswordBoxUseRef } from "../ReusableFunctions/InputBox";
-import * as Animatable from 'react-native-animatable';
 
-import {Timer, Countdown} from 'react-native-element-timer';
+import {Countdown} from 'react-native-element-timer';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { SuccessButton } from "../ReusableFunctions/Buttons";
 import { NormalErrorMessage } from "../ReusableFunctions/ErrorMessage";

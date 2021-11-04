@@ -1,5 +1,5 @@
 import React,{useEffect,useRef} from "react";
-import { StyleSheet,Text, View,TouchableOpacity } from "react-native";
+import { StyleSheet,Text, View,TouchableOpacity, ToastAndroid } from "react-native";
 import {InputBoxUseRef, PasswordBoxUseRef} from "../../Components/ReusableFunctions/InputBox";
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +8,7 @@ import { PrivateNavigation } from "../../Navigation/Navigation";
 import { SuccessButton } from "../../Components/ReusableFunctions/Buttons";
 import { useNavigation } from "@react-navigation/native";
 import { MainScreen } from "../../Components/ReusableFunctions/Containers";
+import { ConditionEmail, ConditionLength } from "../../Components/ReusableFunctions/Conditions";
 
 const LogIn = () =>{
 console.log('[LogIn] : Screen : Rerender');
@@ -20,6 +21,8 @@ console.log('[LogIn] : Screen : Rerender');
     var LogInForm = useRef({Email : '',Password:''});
 
     const LogIn = () =>{
+        if(!ConditionEmail(LogInForm.current.Email)
+        && !ConditionLength(LogInForm.current.Password,8)){
                 SetLoading(true);
 
         setTimeout(async () => {
@@ -27,16 +30,23 @@ console.log('[LogIn] : Screen : Rerender');
             SetIsLoggedIn(true);
             SetLoading(false);
         }, 2000);
+        }else{
+            ToastAndroid.showWithGravityAndOffset(
+      "Make Sure Enter Email And Password",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50
+    );
+        }
     }
 
     const ToRegister = () =>{
 navigation.navigate('Register'
-                    ,{Email:LogInForm.current.Email
-                    ,LogIn:LogIn
-                    });
+                    ,{Email:LogInForm.current.Email});
     }
 
-    useEffect(() => {        
+    useEffect(() => {
         setTimeout(async () => {
           var token =  await AsyncStorage.getItem('token');
           if(token == null){SetIsLoggedIn(false);}else{SetIsLoggedIn(true);}
